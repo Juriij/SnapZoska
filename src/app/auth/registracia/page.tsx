@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 
 export const metadata = {title: "Registrácia | ZoškaSnap"};
 
-export default function Register() {
+export default function SingUp() {
   return (
     <Container>
       <Typography> Registrácia </Typography>
