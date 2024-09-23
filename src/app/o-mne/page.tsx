@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 
 export const metadata = {title: "O mne | ZoškaSnap"};
 
-export default function About() {
+export default function AboutMe() {
   return (
     <Container>
       <Typography> Stránka o mne </Typography>
