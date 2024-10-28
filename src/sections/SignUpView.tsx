@@ -4,16 +4,16 @@
 
 import {
   Button,
-  Checkbox,
+  // Checkbox,
   Container,
-  FormControlLabel,
-  TextField,
+  // FormControlLabel,
+  // TextField,
   Typography,
-  Divider,
+  // Divider,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
+// import FacebookIcon from "@mui/icons-material/Facebook";
 
 export default function SignUpView() {
   return (
