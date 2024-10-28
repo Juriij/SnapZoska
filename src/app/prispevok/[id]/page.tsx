@@ -1,15 +1,18 @@
 
+
 // src/app/prispevok/[id]/page.tsx
 
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 
-export const metadata = {title: "Konkrétny príspevok | ZoškaSnap"};
 
-export default function PostDetails() {
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+
+export const metadata = {title: 'Detail prispevku | ZoskaSnap'}
+
+export default function PostDetail() {
   return (
     <Container>
-      <Typography> Detail konkrétneho príspevku </Typography>
+        <Typography>Detail prispevku</Typography>
     </Container>
   );
 }

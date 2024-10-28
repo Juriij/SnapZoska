@@ -1,8 +1,12 @@
+//src/app/api/auth/[...nextauth]/authOptions.ts
 
-// src/app/api/auth/[...nextauth]/authOptions.ts
+
+
 
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,6 +16,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  debug: true, // Enable/disable detailed logging
   pages: {
     signIn: '/auth/prihlasenie',
     signOut: '/auth/odhlasenie',
