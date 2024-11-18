@@ -1,0 +1,8 @@
+[name] [model] @relation(fields: [...], references: [...], onDelete: ...)
+
+-> @relation creates connection within tables.
+-> [name] is name of a new attribute. 
+-> [model] is the model which the current model wants to bond with. 
+-> fields: specifies a foreign key in the current model
+-> references: specifies a key in a different model that the current foreign key aims to
+-> onDelete: specifies what happens when the parent record is deleted
