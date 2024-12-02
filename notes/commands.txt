@@ -6,3 +6,5 @@ npm run -> sets up developer server on a localhost
 npx db prisma push -> uploads all the changes to the database
 
 npx prisma generate ->  makes the changes available to a prisma client
+
+npx prisma studio -> opens up the database in a browser
