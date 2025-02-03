@@ -1,18 +1,18 @@
-// src/sections/SignInView.tsx
-
 "use client";
 
-
 import {
-    Button,
-    Container,
-    Typography
-  } from "@mui/material";
-  import { signIn } from "next-auth/react";
-  import GoogleIcon from "@mui/icons-material/Google";
-  // import FacebookIcon from "@mui/icons-material/Facebook";
+  Button,
+  Container,
+  Typography
+} from "@mui/material";
+import { signIn } from "next-auth/react";
+import GoogleIcon from "@mui/icons-material/Google";
+import { useTheme } from "@mui/material/styles";
 
 export default function SignInView() {
+  const theme = useTheme();
+  const linkColor = theme.palette.mode === "dark" ? "#ffcc00" : "#4a148c"; 
+
   return (
     <Container
       maxWidth="xs"
@@ -32,7 +32,7 @@ export default function SignInView() {
         Prihlásenie
       </Typography>
 
-      {/* Google Sign Up */}
+      {/* Google Sign In Button */}
       <Button
         variant="outlined"
         fullWidth
@@ -43,7 +43,17 @@ export default function SignInView() {
         Prihlásiť sa účtom Google
       </Button>
 
-
+      {/* Link to Registration page */}
+      <Typography variant="body1" sx={{ mt: 3 }}>
+        Nemáte účet?{" "}
+        <Typography
+          component="a"
+          href="/auth/registracia"
+          sx={{ color: linkColor, textDecoration: "none", fontWeight: 500 }}
+        >
+          Prejdite na registráciu
+        </Typography>
+      </Typography>
     </Container>
   );
 }

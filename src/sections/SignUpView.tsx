@@ -1,72 +1,4 @@
-// // src/sections/SignUpView.tsx
-
-// "use client";
-
-// import {
-//   Button,
-//   Container,
-//   Typography
-  
-// } from "@mui/material";
-// import { signIn } from "next-auth/react";
-// import GoogleIcon from "@mui/icons-material/Google";
-// // import FacebookIcon from "@mui/icons-material/Facebook";
-
-// export default function SignUpView() {
-//   return (
-//     <Container
-//       maxWidth="xs"
-//       sx={{
-//         display: "flex",
-//         flexDirection: "column",
-//         alignItems: "center",
-//         mt: 5,
-//         p: 3,
-//         bgcolor: "background.paper",
-//         boxShadow: 3,
-//         borderRadius: 2,
-//       }}
-//     >
-//       {/* Logo / Title */}
-//       <Typography variant="h5" sx={{ mb: 3 }}>
-//         Registrácia
-//       </Typography>
-
-//       {/* Sign-in link */}
-//       <Typography variant="body1" sx={{ mb: 6 }}>
-//         Už máte účet? <a href="/auth/prihlasenie">Prihláste sa</a>
-//       </Typography>
-
-//       {/* Google Sign Up */}
-//       <Button
-//         variant="outlined"
-//         fullWidth
-//         startIcon={<GoogleIcon />}
-//         onClick={() => signIn("google")}
-//         sx={{ mb: 1 }}
-//       >
-//         Registrovať sa účtom Google
-//       </Button>
-
-
-//     </Container>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"use client";
+"use client"; 
 
 import {
   Button,
@@ -75,19 +7,22 @@ import {
   Checkbox,
   FormControlLabel,
   FormHelperText,
-  FormControl
+  FormControl 
 } from "@mui/material";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import GoogleIcon from "@mui/icons-material/Google";
+import { useTheme } from "@mui/material/styles";
 
 export default function SignUpView() {
-  const [isChecked, setIsChecked] = useState(false);
+  const theme = useTheme();
+  const linkColor = theme.palette.mode === "dark" ? "#ffcc00" : "#4a148c"; 
   const [error, setError] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
-    setError(false); // Reset the error message when the checkbox is toggled
+    setError(false); // Reset the error when the checkbox is toggled
   };
 
   const handleGoogleSignIn = () => {
@@ -112,14 +47,21 @@ export default function SignUpView() {
         borderRadius: 2,
       }}
     >
-      {/* Logo / Title */}
+      {/* Title */}
       <Typography variant="h5" sx={{ mb: 3 }}>
         Registrácia
       </Typography>
 
       {/* Sign-in link */}
       <Typography variant="body1" sx={{ mb: 6 }}>
-        Už máte účet? <a href="/auth/prihlasenie">Prihláste sa</a>
+        Už máte účet?{" "}
+        <Typography
+          component="a"
+          href="/auth/prihlasenie"
+          sx={{ color: linkColor, textDecoration: "none", fontWeight: 500 }}
+        >
+          Prihláste sa
+        </Typography>
       </Typography>
 
       {/* Google Sign Up */}
@@ -140,13 +82,21 @@ export default function SignUpView() {
           label={
             <>
               Súhlasím s{" "}
-              <a href="/gdpr" target="_blank" rel="noopener noreferrer">
+              <Typography
+                component="a"
+                href="/gdpr"
+                sx={{ color: linkColor, textDecoration: "none", fontWeight: 500 }}
+              >
                 GDPR
-              </a>{" "}
+              </Typography>{" "}
               a{" "}
-              <a href="/podmienky" target="_blank" rel="noopener noreferrer">
+              <Typography
+                component="a"
+                href="/podmienky"
+                sx={{ color: linkColor, textDecoration: "none", fontWeight: 500 }}
+              >
                 podmienkami používania
-              </a>
+              </Typography>
               .
             </>
           }

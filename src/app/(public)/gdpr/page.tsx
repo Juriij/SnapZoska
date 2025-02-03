@@ -1,18 +1,25 @@
 
-// src/app/gdpr/page.tsx
+"use client";
 
-import { Typography, Container, Box } from "@mui/material";
+import { Typography, Container, Box, Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
-export const metadata = { title: "GDPR | ZoškaSnap" };
+
 
 export default function GDPR() {
+  const router = useRouter();
+
   return (
     <Container maxWidth="md" sx={{ paddingTop: 4 }}>
       <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h1" color="primary">
+        <Typography variant="h4" component="h1" color="primary" >
           Stránka s GDPR informáciami
         </Typography>
       </Box>
+
+      <Button variant="contained" color="primary" onClick={() => router.back()} sx={{ mb: 3 }}>
+        Späť
+      </Button>
 
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6" component="h2" color="primary" sx={{ mb: 2 }}>
