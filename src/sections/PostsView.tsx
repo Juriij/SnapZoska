@@ -12,6 +12,10 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 // Server action import
 import { fetchPosts } from "@/app/actions/posts";
@@ -46,25 +50,48 @@ const PostsView = () => {
   }, []);
 
   return (
-    <Container sx={{ mt: 4, maxWidth: 'sm' }}> {/* Limit container width */}
+    <Container sx={{ mt: 4, maxWidth: 'md' }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Príspevky
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {posts.map((post) => (
-          <Grid item xs={12} key={post.id}> {/* Single column */}
-            <Card sx={{ maxWidth: '100%' }}> {/* Adjust maxWidth */}
+          <Grid item xs={12} sm={6} md={4} key={post.id}>
+            <Card sx={{ 
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              borderRadius: 2,
+              boxShadow: 2,
+              overflow: 'hidden'
+            }}>
               <CardMedia
                 component="img"
-                height="140"
+                sx={{
+                  width: '100%',
+                  height: 300,
+                  objectFit: 'cover'
+                }}
                 image={post.imageUrl}
                 alt={post.caption || "Príspevok bez popisu"}
               />
-              <CardContent>
-                <Typography variant="body1">{post.caption || "Bez popisu"}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {post.user.name || "Neznámy používateľ"}
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {post.user.name || "Neznámy používateľ"}
+                  </Typography>
+                </Box>
+                <Typography variant="body1" sx={{ mb: 2 }}>
+                  {post.caption || "Bez popisu"}
                 </Typography>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <IconButton size="small" color="primary">
+                    <FavoriteBorderIcon />
+                  </IconButton>
+                  <IconButton size="small" color="primary">
+                    <ChatBubbleOutlineIcon />
+                  </IconButton>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
