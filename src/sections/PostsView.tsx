@@ -1,9 +1,9 @@
-// src/views/private/PostsView.tsx
-
 "use client";
 
 // React imports
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react"; // <-- Import useSession
+import { likePost, unlikePost } from "@/app/actions/posts";
 
 // MUI imports
 import Container from "@mui/material/Container";
@@ -26,15 +26,20 @@ interface Post {
   userId: string;
   imageUrl: string;
   caption?: string | null;
-  createdAt: Date; // Adjusted to match fetched data type
-  updatedAt: Date; // Adjusted to match fetched data type
+  createdAt: Date;
+  updatedAt: Date;
   user: {
     name: string | null;
+  };
+  _count: {
+    likes: number;
   };
 }
 
 const PostsView = () => {
+  const { data: session } = useSession(); // <-- Use the session here
   const [posts, setPosts] = useState<Post[]>([]);
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -49,6 +54,29 @@ const PostsView = () => {
     loadPosts();
   }, []);
 
+  // Handle like/unlike in PostsView.tsx
+  const handleLike = async (postId: string) => {
+    try {
+      await likePost(session.user.id, postId); // Call the API to like the post
+      setPosts(posts.map(post => 
+        post.id === postId ? { ...post, _count: { likes: post._count.likes + 1 } } : post
+      ));
+    } catch (error) {
+      console.error("Error liking post", error);
+    }
+  };
+
+  const handleUnlike = async (postId: string) => {
+    try {
+      await unlikePost(session.user.id, postId); // Call the API to unlike the post
+      setPosts(posts.map(post => 
+        post.id === postId ? { ...post, _count: { likes: post._count.likes - 1 } } : post
+      ));
+    } catch (error) {
+      console.error("Error unliking post", error);
+    }
+  };
+
   return (
     <Container sx={{ mt: 4, maxWidth: 'md' }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
@@ -57,7 +85,7 @@ const PostsView = () => {
       <Grid container spacing={3}>
         {posts.map((post) => (
           <Grid item xs={12} sm={6} md={4} key={post.id}>
-            <Card sx={{ 
+            <Card sx={{
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -85,7 +113,17 @@ const PostsView = () => {
                   {post.caption || "Bez popisu"}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <IconButton size="small" color="primary">
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      if (likedPosts.has(post.id)) {
+                        handleUnlike(post.id);
+                      } else {
+                        handleLike(post.id);
+                      }
+                    }}
+                  >
                     <FavoriteBorderIcon />
                   </IconButton>
                   <IconButton size="small" color="primary">
