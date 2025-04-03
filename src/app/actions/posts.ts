@@ -70,12 +70,19 @@ export const fetchPosts = async () => {
   try {
     const posts = await prisma.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { 
+      include: {
         user: true,
-        _count: {
-          select: { likes: true }, // Get the number of likes for each post
+        likes: {
+          select: {
+            userId: true
+          }
         },
-      },
+        _count: {
+          select: {
+            likes: true
+          }
+        }
+      }
     });
 
     return posts;
@@ -113,6 +120,19 @@ export const createPost = async (userId: string, imageUrl: string, caption?: str
         imageUrl,
         caption,
       },
+      include: {
+        user: true,
+        likes: {
+          select: {
+            userId: true
+          }
+        },
+        _count: {
+          select: {
+            likes: true
+          }
+        }
+      }
     });
 
     return newPost;

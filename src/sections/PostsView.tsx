@@ -3,9 +3,6 @@
 // React imports
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react"; // <-- Import useSession
-import { likePost, unlikePost } from "@/app/actions/posts";
-
-// MUI imports
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -14,11 +11,15 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import Button from "@mui/material/Button";
 
 // Server action import
 import { fetchPosts } from "@/app/actions/posts";
+import { toggleLike } from "@/app/actions/likes";
+import { resetAllLikes } from "@/app/actions/resetLikes";
 
 // Post interface
 interface Post {
@@ -31,15 +32,16 @@ interface Post {
   user: {
     name: string | null;
   };
+  likes: { userId: string }[];
   _count: {
     likes: number;
   };
 }
 
 const PostsView = () => {
-  const { data: session } = useSession(); // <-- Use the session here
   const [posts, setPosts] = useState<Post[]>([]);
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -54,38 +56,52 @@ const PostsView = () => {
     loadPosts();
   }, []);
 
-  // Handle like/unlike in PostsView.tsx
-  const handleLike = async (postId: string) => {
+  const handleLikeClick = async (postId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (!session?.user?.id || isLoading) return;
+    
+    setIsLoading(true);
     try {
-      await likePost(session.user.id, postId); // Call the API to like the post
-      setPosts(posts.map(post => 
-        post.id === postId ? { ...post, _count: { likes: post._count.likes + 1 } } : post
-      ));
+      const isLiked = await toggleLike(postId);
+      setPosts(prevPosts => 
+        prevPosts.map(post => {
+          if (post.id === postId) {
+            const currentLikes = post._count?.likes || 0;
+            return {
+              ...post,
+              _count: {
+                ...post._count,
+                likes: isLiked ? currentLikes + 1 : currentLikes - 1
+              },
+              likes: isLiked 
+                ? [...(post.likes || []), { userId: session.user!.id }]
+                : (post.likes || []).filter(like => like.userId !== session.user!.id)
+            };
+          }
+          return post;
+        })
+      );
     } catch (error) {
-      console.error("Error liking post", error);
+      console.error("Failed to toggle like:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleUnlike = async (postId: string) => {
-    try {
-      await unlikePost(session.user.id, postId); // Call the API to unlike the post
-      setPosts(posts.map(post => 
-        post.id === postId ? { ...post, _count: { likes: post._count.likes - 1 } } : post
-      ));
-    } catch (error) {
-      console.error("Error unliking post", error);
-    }
+  const isLikedByUser = (post: Post) => {
+    if (!session?.user?.id) return false;
+    return post.likes.some(like => like.userId === session.user.id);
   };
 
   return (
-    <Container sx={{ mt: 4, maxWidth: 'md' }}>
+    <Container sx={{ mt: 4, mb: 8, maxWidth: 'md', pb: 4 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Príspevky
       </Typography>
       <Grid container spacing={3}>
         {posts.map((post) => (
           <Grid item xs={12} sm={6} md={4} key={post.id}>
-            <Card sx={{
+            <Card sx={{ 
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -112,20 +128,22 @@ const PostsView = () => {
                 <Typography variant="body1" sx={{ mb: 2 }}>
                   {post.caption || "Bez popisu"}
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <IconButton
-                    size="small"
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <IconButton 
+                    size="small" 
                     color="primary"
-                    onClick={() => {
-                      if (likedPosts.has(post.id)) {
-                        handleUnlike(post.id);
-                      } else {
-                        handleLike(post.id);
-                      }
-                    }}
+                    onClick={(e) => handleLikeClick(post.id, e)}
+                    disabled={isLoading || !session}
                   >
-                    <FavoriteBorderIcon />
+                    {isLikedByUser(post) ? (
+                      <FavoriteIcon sx={{ color: 'red' }} />
+                    ) : (
+                      <FavoriteBorderIcon />
+                    )}
                   </IconButton>
+                  <Typography variant="body2" color="text.secondary">
+                    {post._count?.likes || 0}
+                  </Typography>
                   <IconButton size="small" color="primary">
                     <ChatBubbleOutlineIcon />
                   </IconButton>
