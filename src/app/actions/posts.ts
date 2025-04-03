@@ -79,7 +79,8 @@ export const fetchPosts = async () => {
         },
         _count: {
           select: {
-            likes: true
+            likes: true,
+            comments: true
           }
         }
       }
