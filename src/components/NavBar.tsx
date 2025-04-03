@@ -9,7 +9,8 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Divider
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -50,6 +51,11 @@ export default function Navbar() {
     signOut();
   };
 
+  const handleThemeToggle = () => {
+    toggleTheme();
+    handleMenuClose();
+  };
+
   const nonAuthPaths = [
     { label: "Domov", value: "/", icon: <HomeIcon /> },
     { label: "O mne", value: "/o-mne", icon: <AccessibilityIcon /> },
@@ -60,7 +66,7 @@ export default function Navbar() {
   const authPaths = [
     { label: "Domov", value: "/", icon: <HomeIcon /> },
     { label: "Hľadať", value: "/hladanie", icon: <SearchIcon /> },
-    { label: "Pridať", value: "/pridat", icon: <AddCircleIcon /> },
+    { label: "Pridať", value: "/prispevok", icon: <AddCircleIcon /> },
     {
       label: "Profil",
       value: "profile-menu",
@@ -90,7 +96,7 @@ export default function Navbar() {
         showLabels
         value={value}
         onChange={(event, newValue) => {
-          if (newValue !== "toggle-theme" && newValue !== "profile-menu") {
+          if (newValue !== "profile-menu") {
             setValue(newValue);
             router.push(newValue);
           }
@@ -104,16 +110,6 @@ export default function Navbar() {
             icon={path.icon}
           />
         ))}
-        {/* Light/Dark Mode Button */}
-        <BottomNavigationAction
-          label="Mode"
-          value="toggle-theme"
-          icon={mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleTheme();
-          }}
-        />
       </BottomNavigation>
 
       {/* User Menu */}
@@ -136,6 +132,19 @@ export default function Navbar() {
           </ListItemIcon>
           <ListItemText>Profil</ListItemText>
         </MenuItem>
+        <MenuItem onClick={handleThemeToggle}>
+          <ListItemIcon>
+            {mode === 'dark' ? (
+              <Brightness7Icon fontSize="small" />
+            ) : (
+              <Brightness4Icon fontSize="small" />
+            )}
+          </ListItemIcon>
+          <ListItemText>
+            {mode === 'dark' ? 'Svetlý režim' : 'Tmavý režim'}
+          </ListItemText>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleSignOut}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />
