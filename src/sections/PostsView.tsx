@@ -14,7 +14,6 @@ import Box from "@mui/material/Box";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
 import CommentDialog from '@/components/CommentDialog';
 import { addComment, getPostComments } from '@/app/actions/comments';
@@ -22,7 +21,6 @@ import { addComment, getPostComments } from '@/app/actions/comments';
 // Server action import
 import { fetchPosts } from "@/app/actions/posts";
 import { toggleLike } from "@/app/actions/likes";
-import { resetAllLikes } from "@/app/actions/resetLikes";
 
 // Post interface
 interface Comment {
